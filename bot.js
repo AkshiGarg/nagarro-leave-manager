@@ -2,6 +2,8 @@
 // Licensed under the MIT License.
 
 const { ActivityTypes } = require('botbuilder');
+const { WelcomeUser } = require('./welcome_user');
+
 
 class MyBot {
     /**
@@ -13,7 +15,9 @@ class MyBot {
         if (turnContext.activity.type === ActivityTypes.Message) {
             await turnContext.sendActivity(`You said '${ turnContext.activity.text }'`);
         } else {
-            await turnContext.sendActivity(`[${ turnContext.activity.type } event detected]`);
+            this.welcomeUser = new WelcomeUser();
+
+            await this.welcomeUser.welcomeUser(turnContext);
         }
     }
 }
