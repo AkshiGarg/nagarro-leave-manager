@@ -5,21 +5,24 @@ const { ActivityTypes } = require('botbuilder');
 const { WelcomeUser } = require('./welcome_user');
 
 
-class MyBot {
+class NagarroLeaveManagerBot {
     /**
      *
      * @param {TurnContext} on turn context object.
      */
     async onTurn(turnContext) {
-        // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
-        if (turnContext.activity.type === ActivityTypes.Message) {
-            await turnContext.sendActivity(`You said '${ turnContext.activity.text }'`);
-        } else {
-            this.welcomeUser = new WelcomeUser();
+        const activityType = turnContext.activity.type;
 
-            await this.welcomeUser.welcomeUser(turnContext);
+        switch (activityType) {
+            case ActivityTypes.Message:
+                await turnContext.sendActivity(`You said '${turnContext.activity.text}'`);
+                break;
+            case ActivityTypes.ConversationUpdate:
+                this.welcomeUser = new WelcomeUser();
+                await this.welcomeUser.welcomeUser(turnContext);
+                break;
         }
     }
 }
 
-module.exports.MyBot = MyBot;
+module.exports.NagarroLeaveManagerBot = NagarroLeaveManagerBot;

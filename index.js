@@ -13,7 +13,7 @@ const { BotFrameworkAdapter } = require('botbuilder');
 const { BotConfiguration } = require('botframework-config');
 
 // This bot's main dialog.
-const { MyBot } = require('./bot');
+const { NagarroLeaveManagerBot } = require('./bot');
 
 // Read botFilePath and botFileSecret from .env file
 // Note: Ensure you have a .env file and include botFilePath and botFileSecret.
@@ -70,7 +70,7 @@ adapter.onTurnError = async (context, error) => {
 };
 
 // Create the main dialog.
-const myBot = new MyBot();
+const myBot = new NagarroLeaveManagerBot();
 
 // Listen for incoming requests.
 server.post('/api/messages', (req, res) => {
