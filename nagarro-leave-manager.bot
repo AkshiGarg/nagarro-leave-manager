@@ -1,0 +1,53 @@
+{
+    "name": "nagarro-leave-manager",
+    "services": [
+        {
+            "type": "abs",
+            "tenantId": "a45fe71a-f480-4e42-ad5e-aff33165aa35",
+            "subscriptionId": "212cc099-4657-409a-9620-73a693a1256d",
+            "resourceGroup": "nagp",
+            "serviceName": "NagpPracticeBot",
+            "name": "NagpPracticeBot",
+            "id": "1",
+            "appId": "654ed24d-1fd4-4b34-8d40-c6caece3a835"
+        },
+        {
+            "type": "blob",
+            "connectionString": "DefaultEndpointsProtocol=https;AccountName=nagppracticebot9b2b;AccountKey=JNVDI621y5AQcXaVbwgWRHjWmzLoviZsdPBEvWpvjAsLxUXFBgXwaMvgzl81zI2YMIQogu712akUCj/yJsFncA==;",
+            "tenantId": "a45fe71a-f480-4e42-ad5e-aff33165aa35",
+            "subscriptionId": "212cc099-4657-409a-9620-73a693a1256d",
+            "resourceGroup": "nagp",
+            "serviceName": "nagppracticebot9b2b",
+            "id": "2"
+        },
+        {
+            "type": "endpoint",
+            "appId": "",
+            "appPassword": "",
+            "endpoint": "http://localhost:3978/api/messages",
+            "name": "development",
+            "id": "3"
+        },
+        {
+            "type": "endpoint",
+            "appId": "654ed24d-1fd4-4b34-8d40-c6caece3a835",
+            "appPassword": "-J{S%Iua4vBM^*E73gGRuV?#WyrOL2]Q",
+            "endpoint": "https://nagppracticebot.azurewebsites.net/api/messages",
+            "name": "production",
+            "id": "4"
+        },
+        {
+            "type": "appInsights",
+            "instrumentationKey": "e3431b8a-4820-43db-885b-30bd3ae4cb43",
+            "applicationId": "f14687ee-469e-4a60-a5c1-883b1144da5f",
+            "apiKeys": {},
+            "tenantId": "a45fe71a-f480-4e42-ad5e-aff33165aa35",
+            "subscriptionId": "212cc099-4657-409a-9620-73a693a1256d",
+            "resourceGroup": "nagp",
+            "serviceName": "NagpPracticeBotswzdk2",
+            "id": "5"
+        }
+    ],
+    "padlock": "",
+    "version": "2.0"
+}
