@@ -4,6 +4,8 @@
 const { ActivityTypes } = require('botbuilder');
 const { LuisRecognizer} = require('botbuilder-ai');
 const { WelcomeUser } = require('./welcome_user');
+const { HolidayCalendar } = require('./holiday_calendar');
+
 // State Accessor Properties
 const CONVERSATION_STATE_ACCESSOR = 'conversationData';
 const USER_STATE_ACCESSOR = 'userData';
@@ -78,10 +80,10 @@ class NagarroLeaveManagerBot {
                             case HELP:
                                 await this.greet.giveIntroduction(turnContext);
                                 break;
-                            // case HOLIDAY:
-                            //     const holidayCalendar = new HolidayCalendar();
-                            //     await turnContext.sendActivity(holidayCalendar.listHolidays(turnContext, entities));
-                            //     break;
+                            case HOLIDAY:
+                                const holidayCalendar = new HolidayCalendar();
+                                await holidayCalendar.listHolidays(turnContext, entities);
+                                break;
                             // case LEAVE_REQUESTS:
                             //     const leaveRequestManager = new LeaveRequestManager(this.userStateAccessor);
                             //     if (entities[Action_Types]) {
