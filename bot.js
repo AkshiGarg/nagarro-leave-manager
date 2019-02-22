@@ -78,22 +78,22 @@ class NagarroLeaveManagerBot {
                             case HELP:
                                 await this.greet.giveIntroduction(turnContext);
                                 break;
-                            case HOLIDAY:
-                                const holidayCalendar = new HolidayCalendar();
-                                await turnContext.sendActivity(holidayCalendar.listHolidays(turnContext, entities));
-                                break;
-                            case LEAVE_REQUESTS:
-                                const leaveRequestManager = new LeaveRequestManager(this.userStateAccessor);
-                                if (entities[Action_Types]) {
-                                    if (entities[Action_Types][0].includes(APPLY_ACTION)) {
-                                        return await this.applyForLeave(userProfile, entities, turnContext, conversationFlow);
-                                    } else if (entities[Action_Types][0].includes(SHOW_ACTION)) {
-                                        return turnContext.sendActivity(leaveRequestManager.viewSubmittedRequests(userProfile, turnContext, entities));
-                                    }
-                                } else {
-                                    await turnContext.sendActivity("I didn't understand your query.");
-                                }
-                                break;
+                            // case HOLIDAY:
+                            //     const holidayCalendar = new HolidayCalendar();
+                            //     await turnContext.sendActivity(holidayCalendar.listHolidays(turnContext, entities));
+                            //     break;
+                            // case LEAVE_REQUESTS:
+                            //     const leaveRequestManager = new LeaveRequestManager(this.userStateAccessor);
+                            //     if (entities[Action_Types]) {
+                            //         if (entities[Action_Types][0].includes(APPLY_ACTION)) {
+                            //             return await this.applyForLeave(userProfile, entities, turnContext, conversationFlow);
+                            //         } else if (entities[Action_Types][0].includes(SHOW_ACTION)) {
+                            //             return turnContext.sendActivity(leaveRequestManager.viewSubmittedRequests(userProfile, turnContext, entities));
+                            //         }
+                            //     } else {
+                            //         await turnContext.sendActivity("I didn't understand your query.");
+                            //     }
+                            //     break;
                             case NONE:
                                 await turnContext.sendActivity("I didn't understand your query.");
                                 break;
