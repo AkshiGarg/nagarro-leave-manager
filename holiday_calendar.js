@@ -10,6 +10,7 @@ const FLEXIBLE_HOLIDAY = "flexible"
 class HolidayCalendar {
 
     async listHolidays(context, entities) {
+        // If date is mentioned in message filter by date otherwise send all the holidays (public/ flexible)
         if (entities[DATE_TIME]) {
             var timexDate = new TimexProperty(entities[DATE_TIME][0].timex.toString());
             if (entities[REQUEST_TYPES] && entities[REQUEST_TYPES][0].includes(FLEXIBLE_HOLIDAY_TYPE)) {
@@ -43,16 +44,7 @@ class HolidayCalendar {
 
         } else {
             if (entities[REQUEST_TYPES] && entities[REQUEST_TYPES][0].includes(FLEXIBLE_HOLIDAY_TYPE)) {
-                var flexibleHolidays = holidays.filter(
-                    function (calendarHoliday) {
-                        return calendarHoliday.type === FLEXIBLE_HOLIDAY && (new Date() < new Date(calendarHoliday.date));
-                    }
-                );
-                if (flexibleHolidays.length > 0) {
-                    this.holidayCard = this.createHeroCard(flexibleHolidays);
-                } else {
-                    await context.sendActivity("No flexible holidays.");
-                }
+                await this.sendUpcomingFlexibleHolidays(flexibleHolidays, context, new Date());
             } else {
 
                 var publicHolidays = holidays.filter(
@@ -62,7 +54,6 @@ class HolidayCalendar {
                 );
 
                 if (publicHolidays.length > 0) {
-
                     this.holidayCard = this.createAdaptiveCard(publicHolidays);
                 } else {
                     await context.sendActivity("No public holidays.");
@@ -75,6 +66,18 @@ class HolidayCalendar {
             attachments: [this.holidayCard]
         };
         await context.sendActivity(reply);
+    }
+
+    async sendUpcomingFlexibleHolidays(flexibleHolidays, context, dateFilter) {
+        var flexibleHolidays = holidays.filter(function (calendarHoliday) {
+            return calendarHoliday.type === FLEXIBLE_HOLIDAY && (dateFilter < new Date(calendarHoliday.date));
+        });
+        if (flexibleHolidays.length > 0) {
+            this.holidayCard = this.createHeroCard(flexibleHolidays);
+        }
+        else {
+            await context.sendActivity("No flexible holidays.");
+        }
     }
 
     createHeroCard(flexibleHolidays) {

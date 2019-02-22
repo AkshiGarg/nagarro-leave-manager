@@ -100,26 +100,6 @@ class NagarroLeaveManagerBot {
                                 await turnContext.sendActivity("I didn't understand your query.");
                                 break;
                         }
-                        // if (topIntent === GREETING || topIntent === HELP) {
-                        //     await this.welcomeUser.giveIntroduction(turnContext);
-                        // } else if (topIntent === HOLIDAY) {
-                        //     const holidayCalendar = new HolidayCalendar();
-                        //     await turnContext.sendActivity(holidayCalendar.listHolidays(turnContext, result.entities));
-                        // }
-                        // else if (topIntent === LEAVE_REQUESTS) {
-                        //     const leaveRequestManager = new LeaveRequestManager(this.userStateAccessor);
-                        //     if (result.entities[Action_Types]) {
-                        //         if (result.entities[Action_Types][0].includes(APPLY_ACTION)) {
-                        //             return await this.applyForLeave(userProfile, result.entities, turnContext, conversationFlow);
-                        //         } else if (result.entities[Action_Types][0].includes(SHOW_ACTION)) {
-                        //             return turnContext.sendActivity(leaveRequestManager.viewSubmittedRequests(userProfile, turnContext, result.entities));
-                        //         }
-                        //     } else {
-                        //         await turnContext.sendActivity("I didn't understand your query.");
-                        //     }
-                        // } else if (topIntent === NONE) {
-                        //     await turnContext.sendActivity("I didn't understand your query.");
-                        // }
                     } else {
 
                     }
