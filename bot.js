@@ -52,7 +52,6 @@ class NagarroLeaveManagerBot {
 
     async onTurn(turnContext) {
         const activityType = turnContext.activity.type;
-
         switch (activityType) {
             case ActivityTypes.Message:
                 const userProfile = await this.userStateAccessor.get(turnContext, {});
@@ -71,34 +70,47 @@ class NagarroLeaveManagerBot {
                         await this.userStateAccessor.set(turnContext, userProfile);
                         await this.userState.saveChanges(turnContext);
 
-                        // fetch the information of Luis result from conversation state (if present) otherwise, call LUIS api.
-                        const { topIntent, entities } = await this.fetchLuisResult(conversationFlow, turnContext);
+                        if (turnContext.activity.channelData.postback) {
+                            const flexibleHoliday = turnContext.activity.value;
+                            this.leaveSubmissionForm.submitLeaveRequest(userProfile.id,
+                                flexibleHoliday.date,
+                                "flexible holidays",
+                                flexibleHoliday.name + " - Flexible Holiday",
+                                "flexible holiday");
 
-                        await this.conversationStateAccessor.set(turnContext, conversationFlow);
-                        await this.conversationState.saveChanges(turnContext);
+                            await turnContext.sendActivity(flexibleHoliday.date + " is recorded as your leave.");
+                        } else {
+                            // fetch the information of Luis result from conversation state (if present) otherwise, call LUIS api.
 
-                        switch (topIntent) {
-                            case GREETING:
-                                await turnContext.sendActivity("Hi!! How may I help you?");
-                                break;
-                            case HELP:
-                                await this.greet.giveIntroduction(turnContext);
-                                break;
-                            case HOLIDAY:
-                                const holidayCalendar = new HolidayCalendar();
-                                await holidayCalendar.listHolidays(turnContext, entities);
-                                break;
-                            case LEAVE_REQUESTS:
-                                if (entities[Action_Types]) {
-                                    await this.fetchLeavesByActionType(userProfile.id, entities, turnContext, conversationFlow);
-                                } else {
-                                    await turnContext.sendActivity("Do you want to apply for a leave or Do you want me to show your leaves.");
-                                }
-                                break;
-                            case NONE:
-                                await turnContext.sendActivity("I didn't understand your query.");
-                                break;
+                            const { topIntent, entities } = await this.fetchLuisResult(conversationFlow, turnContext);
+
+                            await this.conversationStateAccessor.set(turnContext, conversationFlow);
+                            await this.conversationState.saveChanges(turnContext);
+
+                            switch (topIntent) {
+                                case GREETING:
+                                    await turnContext.sendActivity("Hi!! How may I help you?");
+                                    break;
+                                case HELP:
+                                    await this.greet.giveIntroduction(turnContext);
+                                    break;
+                                case HOLIDAY:
+                                    const holidayCalendar = new HolidayCalendar();
+                                    await holidayCalendar.listHolidays(turnContext, entities);
+                                    break;
+                                case LEAVE_REQUESTS:
+                                    if (entities[Action_Types]) {
+                                        await this.fetchLeavesByActionType(userProfile.id, entities, turnContext, conversationFlow);
+                                    } else {
+                                        await turnContext.sendActivity("Do you want to apply for a leave or Do you want me to show your leaves.");
+                                    }
+                                    break;
+                                case NONE:
+                                    await turnContext.sendActivity("I didn't understand your query.");
+                                    break;
+                            }
                         }
+
                     } else {
                         // If the user wants to apply for a leave, (s)he is required to enter some related information, after that process the intent.
                         const input = turnContext.activity.text;

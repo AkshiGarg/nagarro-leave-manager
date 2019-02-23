@@ -15,7 +15,9 @@ class LeaveSubmissionForm {
                     "comments": comment
                 }
                 leaveRecords[i].leaveRequests.push(new_leave_request);
-                leaveRecords[i].leavesTaken += 1;
+                if(type === "leave") {
+                    leaveRecords[i].leavesTaken += 1;
+                }
                 break;
             }
         }

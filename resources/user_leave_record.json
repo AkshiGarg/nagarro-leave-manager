@@ -3,7 +3,7 @@
         "name": "Tom",
         "employeeId": "1",
         "totalLeavesAllowed": 27,
-        "leavesTaken": 14,
+        "leavesTaken": 15,
         "leaveRequests": [
             {
                 "reason": "Visa Appointment",
@@ -112,6 +112,18 @@
                 "type": "leave",
                 "date": "3/21/2019",
                 "comments": "no"
+            },
+            {
+                "reason": "Idul Fitr - Flexible Holiday",
+                "type": "flexible holidays",
+                "date": "5-Jun-2019",
+                "comments": "flexible holiday"
+            },
+            {
+                "reason": "Guru Nanak Jayanti - Flexible Holiday",
+                "type": "flexible holidays",
+                "date": "12-nov-2019",
+                "comments": "flexible holiday"
             }
         ]
     },
@@ -126,6 +138,12 @@
                 "type": "leave",
                 "date": "15-mar-2019",
                 "comments": "I am some work in my hometown."
+            },
+            {
+                "reason": "Onam - Flexible Holiday",
+                "type": "flexible holidays",
+                "date": "11-sep-2019",
+                "comments": "flexible holiday"
             }
         ]
     },

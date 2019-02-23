@@ -91,11 +91,13 @@ class HolidayCalendar {
             const button = {
                 type: ActionTypes.PostBack,
                 title: flexibleHolidays[i].day + ", " + flexibleHolidays[i].date + " - " + flexibleHolidays[i].name,
-                value: 'Button clicked'
+                value: {
+                    date: flexibleHolidays[i].date,
+                    name: flexibleHolidays[i].name
+                }
             }
             flexibleHolidayButtons.push(button);
         }
-
 
         const flexibleHolidayHeroCard = CardFactory.heroCard(
             'Flexible Holidays',
