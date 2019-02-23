@@ -7,6 +7,7 @@ const { WelcomeUser } = require('./welcome_user');
 const { HolidayCalendar } = require('./holiday_calendar');
 const { LeaveRequestManager } = require('./leave_request_manager');
 const { DateUtil } = require('./util/date_util');
+const { LeaveSubmissionForm } = require("./util/leave_submission_form")
 
 // State Accessor Properties
 const CONVERSATION_STATE_ACCESSOR = 'conversationData';
@@ -31,8 +32,6 @@ const detail = {
     comment: 'comment',
     confirm: 'confirm'
 };
-var fs = require('fs');
-const USER_LEAVE_RECORDS_FILE = './resources/user_leave_record.json';
 
 class NagarroLeaveManagerBot {
 
@@ -48,6 +47,7 @@ class NagarroLeaveManagerBot {
         this.userState = userState;
 
         this.greet = new WelcomeUser();
+        this.leaveSubmissionForm = new LeaveSubmissionForm();
     }
 
     async onTurn(turnContext) {
@@ -122,7 +122,7 @@ class NagarroLeaveManagerBot {
 
     // Two action types are acceptable (show to list / apply to apply for leave)
     async fetchLeavesByActionType(userId, entities, turnContext, conversationFlow) {
-        const userRecord = this.getUserRecordFromFile(userId);
+        const userRecord = this.leaveSubmissionForm.getUserRecordFromFile(userId);
         const actionTypes = entities[Action_Types][0];
         if (!userRecord) {
             await turnContext.sendActivity("No user found with id: " + userId);
@@ -174,13 +174,6 @@ class NagarroLeaveManagerBot {
         await this.conversationState.saveChanges(turnContext);
     }
 
-    getUserRecordFromFile(userId) {
-        const records = JSON.parse(fs.readFileSync(USER_LEAVE_RECORDS_FILE));
-        var userRecord = records.find(leaveRecord => leaveRecord.employeeId === userId);
-        return userRecord;
-    }
-
-
     async getDetailsToApplyForLeave(input, userProfile, conversationFlow, turnContext) {
         let result;
         switch (conversationFlow.promptedForLeaveRequestDetails) {
@@ -209,23 +202,11 @@ class NagarroLeaveManagerBot {
                 break;
             case detail.submitted:
                 if (input.toLowerCase() === 'y') {
-                    var jsonString = fs.readFileSync(USER_LEAVE_RECORDS_FILE);
-                    var leaveRecords = JSON.parse(jsonString);
-                    for (let i = 0; i < leaveRecords.length; i++) {
-                        if (leaveRecords[i].employeeId === userProfile.id) {
-                            let new_leave_request = {
-                                "reason": userProfile.reason,
-                                "type": "leave",
-                                "date": userProfile.leaveDate,
-                                "comments": userProfile.comment
-                            }
-                            leaveRecords[i].leaveRequests.push(new_leave_request);
-                            leaveRecords[i].leavesTaken += 1;
-                            break;
-                        }
-                    }
-                    var updatedData = JSON.stringify(leaveRecords, null, 4);
-                    fs.writeFileSync(USER_LEAVE_RECORDS_FILE, updatedData);
+                    this.leaveSubmissionForm.submitLeaveRequest(userProfile.id,
+                        userProfile.leaveDate,
+                        "leave",
+                        userProfile.reason,
+                        userProfile.comment);
                     conversationFlow.promptedForLeaveRequestDetails = detail.none;
 
                     await turnContext.sendActivity("Leave record updated");

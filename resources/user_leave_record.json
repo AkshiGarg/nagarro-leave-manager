@@ -3,7 +3,7 @@
         "name": "Tom",
         "employeeId": "1",
         "totalLeavesAllowed": 27,
-        "leavesTaken": 12,
+        "leavesTaken": 14,
         "leaveRequests": [
             {
                 "reason": "Visa Appointment",
@@ -99,6 +99,18 @@
                 "reason": "fevr",
                 "type": "leave",
                 "date": "3/13/2019",
+                "comments": "no"
+            },
+            {
+                "reason": "no",
+                "type": "leave",
+                "date": "3/15/2019",
+                "comments": "no"
+            },
+            {
+                "reason": "personla",
+                "type": "leave",
+                "date": "3/21/2019",
                 "comments": "no"
             }
         ]
