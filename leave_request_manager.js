@@ -10,34 +10,19 @@ const REQUEST_TYPES = "request_types";
 
 class LeaveRequestManager {
     async viewSubmittedRequests(userRecord, context, entities) {
-        var leaveRequests = userRecord.leaveRequests.filter(
-            function (leaveRequest) {
-                if (entities[DATE_TIME]) {
-                    if (entities[DATE_TIME][0].type === 'date') {
 
-                        var luisDuration = new Date(entities[DATE_TIME][0].timex[0].toLocaleString());
-                        var luisDate = luisDuration.getDate();
-                        var luisMonth = luisDuration.getMonth();
-                        var leaveDate = new Date(leaveRequest.date)
-                        return entities[REQUEST_TYPES][0].includes(leaveRequest.type)
-                            && (luisDate === leaveDate.getDate() && luisMonth === leaveDate.getMonth());
-                    } else if (entities[DATE_TIME][0].type === 'daterange') {
-                        new TimexProperty(entities[DATE_TIME]);
-                        LeaveRequestManager.filterByDate(entities[DATE_TIME], leaveRequest.date);
-                    }
-                } else {
-                    var requestedDate = new Date();
-                }
-                return entities[REQUEST_TYPES][0].includes(leaveRequest.type)
-                    && (requestedDate < new Date(leaveRequest.date));
-            }
-        );
+        const dateFilter = entities[DATE_TIME] ?
+            this.getDateFilter(entities[DATE_TIME])
+            : new Date();
+
+        var leaveRequests = userRecord.leaveRequests.filter(
+            leaveRequest => entities[REQUEST_TYPES][0].includes(leaveRequest.type)
+                && (dateFilter < new Date(leaveRequest.date)));
+
         if (leaveRequests.length === 0) {
             await context.sendActivity("No upcoming leave requests found for employee: " + userRecord.employeeId);
         } else {
-
             this.leaveCard = this.createAdaptiveCard(leaveRequests);
-
             const reply = {
                 type: ActivityTypes.Message,
                 text: "You have submitted following requests: ",
@@ -46,6 +31,21 @@ class LeaveRequestManager {
             await context.sendActivity(reply);
         }
 
+    }
+
+    getDateFilter(dateTimeFilter) {
+        // const dateFilterType = dateTimeFilter[0].type;
+        // if (dateFilterType === 'date') {
+        //     var luisDuration = new Date(dateFilterType.timex[0].toLocaleString());
+        //     var luisDate = luisDuration.getDate();
+        //     var luisMonth = luisDuration.getMonth();
+        //     var leaveDate = new Date(leaveRequest.date)
+        //     return entities[REQUEST_TYPES][0].includes(leaveRequest.type)
+        //         && (luisDate === leaveDate.getDate() && luisMonth === leaveDate.getMonth());
+        // } else if (dateFilterType.type === 'daterange') {
+        //     new TimexProperty(dateTimeFilter);
+        // }
+        return new Date();
     }
 
     createAdaptiveCard(leaveRequests) {
