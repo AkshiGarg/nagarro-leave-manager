@@ -43,21 +43,11 @@ class HolidayCalendar {
             }
 
         } else {
+            // filter all the upcoming holidays based on the type (public/flexible) from current date.
             if (entities[REQUEST_TYPES] && entities[REQUEST_TYPES][0].includes(FLEXIBLE_HOLIDAY_TYPE)) {
-                await this.sendUpcomingFlexibleHolidays(flexibleHolidays, context, new Date());
+                await this.sendUpcomingFlexibleHolidays(context, new Date());
             } else {
-
-                var publicHolidays = holidays.filter(
-                    function (calendarHoliday) {
-                        return calendarHoliday.type === PUBLIC_HOLIDAY && (new Date() < new Date(calendarHoliday.date));
-                    }
-                );
-
-                if (publicHolidays.length > 0) {
-                    this.holidayCard = this.createAdaptiveCard(publicHolidays);
-                } else {
-                    await context.sendActivity("No public holidays.");
-                }
+                await this.sendUpcomindPublicHolidays(context, new Date());
             }
         }
 
@@ -68,10 +58,20 @@ class HolidayCalendar {
         await context.sendActivity(reply);
     }
 
-    async sendUpcomingFlexibleHolidays(flexibleHolidays, context, dateFilter) {
-        var flexibleHolidays = holidays.filter(function (calendarHoliday) {
-            return calendarHoliday.type === FLEXIBLE_HOLIDAY && (dateFilter < new Date(calendarHoliday.date));
-        });
+    async sendUpcomindPublicHolidays(context, dateFilter) {
+        var publicHolidays = this.filterHolidaysByTypeAndDate(PUBLIC_HOLIDAY, dateFilter);
+        // If public holidays are left, show in adaptive card
+        if (publicHolidays.length > 0) {
+            this.holidayCard = this.createAdaptiveCard(publicHolidays);
+        }
+        else {
+            await context.sendActivity("No public holidays.");
+        }
+    }
+
+    async sendUpcomingFlexibleHolidays(context, dateFilter) {
+        var flexibleHolidays = this.filterHolidaysByTypeAndDate(FLEXIBLE_HOLIDAY, dateFilter);
+        // If flexible holidays are left, show in hero card.
         if (flexibleHolidays.length > 0) {
             this.holidayCard = this.createHeroCard(flexibleHolidays);
         }
@@ -80,6 +80,11 @@ class HolidayCalendar {
         }
     }
 
+    filterHolidaysByTypeAndDate(holidayTypeFilter, dateFilter) {
+        return holidays.filter(function (calendarHoliday) {
+            return calendarHoliday.type === holidayTypeFilter && (dateFilter < new Date(calendarHoliday.date));
+        });
+    }
     createHeroCard(flexibleHolidays) {
         let flexibleHolidayButtons = [];
         for (var i = 0; i < flexibleHolidays.length; i++) {
@@ -112,7 +117,7 @@ class HolidayCalendar {
             "version": "1.0",
             "body": []
         };
-        
+
         var textBlocks = [];
         for (var i = 0; i < publicHolidays.length; i++) {
             let textBlock = {
