@@ -2,9 +2,10 @@
 // Licensed under the MIT License.
 
 const { ActivityTypes } = require('botbuilder');
-const { LuisRecognizer} = require('botbuilder-ai');
+const { LuisRecognizer } = require('botbuilder-ai');
 const { WelcomeUser } = require('./welcome_user');
 const { HolidayCalendar } = require('./holiday_calendar');
+const { LeaveRequestManager } = require('./leave_request_manager');
 
 // State Accessor Properties
 const CONVERSATION_STATE_ACCESSOR = 'conversationData';
@@ -20,6 +21,7 @@ const LEAVE_REQUESTS = "leave_requests";
 const APPLY_ACTION = "apply";
 const SHOW_ACTION = "show";
 const Action_Types = "action_types";
+const DATE_TIME = "datetime";
 
 const detail = {
     none: 'none',
@@ -28,6 +30,8 @@ const detail = {
     comment: 'comment',
     confirm: 'confirm'
 };
+var fs = require('fs');
+const USER_LEAVE_RECORDS_FILE = './resources/user_leave_record.json';
 
 class NagarroLeaveManagerBot {
 
@@ -84,18 +88,13 @@ class NagarroLeaveManagerBot {
                                 const holidayCalendar = new HolidayCalendar();
                                 await holidayCalendar.listHolidays(turnContext, entities);
                                 break;
-                            // case LEAVE_REQUESTS:
-                            //     const leaveRequestManager = new LeaveRequestManager(this.userStateAccessor);
-                            //     if (entities[Action_Types]) {
-                            //         if (entities[Action_Types][0].includes(APPLY_ACTION)) {
-                            //             return await this.applyForLeave(userProfile, entities, turnContext, conversationFlow);
-                            //         } else if (entities[Action_Types][0].includes(SHOW_ACTION)) {
-                            //             return turnContext.sendActivity(leaveRequestManager.viewSubmittedRequests(userProfile, turnContext, entities));
-                            //         }
-                            //     } else {
-                            //         await turnContext.sendActivity("I didn't understand your query.");
-                            //     }
-                            //     break;
+                            case LEAVE_REQUESTS:
+                                if (entities[Action_Types]) {
+                                    await this.fetchLeavesByActionType(userProfile.id, entities, turnContext);
+                                } else {
+                                    await turnContext.sendActivity("Do you want to apply for a leave or Do you want me to show your leaves.");
+                                }
+                                break;
                             case NONE:
                                 await turnContext.sendActivity("I didn't understand your query.");
                                 break;
@@ -112,6 +111,20 @@ class NagarroLeaveManagerBot {
             case ActivityTypes.ConversationUpdate:
                 await this.welcomeUser(turnContext);
                 break;
+        }
+    }
+
+    // Two action types are acceptable (show to list / apply to apply for leave)
+    async fetchLeavesByActionType(userId, entities, turnContext) {
+        const userRecord = this.getUserRecordFromFile(userId);
+        const actionTypes = entities[Action_Types][0];
+        if (!userRecord) {
+            await turnContext.sendActivity("No user found with id: " + userId);
+        } else if (actionTypes.includes(APPLY_ACTION)) {
+            return this.applyForLeave(userRecord, entities, conversationFlow);
+        } else if (actionTypes.includes(SHOW_ACTION)) {
+            const leaveRequestManager = new LeaveRequestManager();
+            await leaveRequestManager.viewSubmittedRequests(userRecord, turnContext, entities);
         }
     }
 
@@ -134,6 +147,30 @@ class NagarroLeaveManagerBot {
         await turnContext.sendActivity('Please provide your employee id.');
         await this.conversationStateAccessor.set(turnContext, conversationFlow);
         await this.conversationState.saveChanges(turnContext);
+    }
+
+    async applyForLeave(userLeaveRecord, entities, conversationFlow) {
+        // const records = fs.readFileSync(USER_LEAVE_RECORDS_FILE);
+        // const leaveRecords = JSON.parse(records);
+        // var userLeaveRecord = leaveRecords.find(leaveRecord => leaveRecord.employeeId === userId);
+        // if (!userLeaveRecord) {
+        // await turnContext.sendActivity("No record found for employee with id: " + userId);
+        // } else 
+        if (userLeaveRecord.leavesTaken === 27) {
+            return "You have taken all your leaves. You can not apply for more.";
+        } else {
+            if (entities[DATE_TIME]) {
+                return "date already mentioned" + new TimexProperty(entities[DATE_TIME][0].timex.toString());
+            } else {
+                return this.askForDate(conversationFlow, turnContext);
+            }
+        }
+    }
+
+    getUserRecordFromFile(userId) {
+        const records = JSON.parse(fs.readFileSync(USER_LEAVE_RECORDS_FILE));
+        var userRecord = records.find(leaveRecord => leaveRecord.employeeId === userId);
+        return userRecord;
     }
 }
 

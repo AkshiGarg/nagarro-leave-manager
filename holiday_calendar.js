@@ -10,7 +10,7 @@ const FLEXIBLE_HOLIDAY = "flexible"
 class HolidayCalendar {
 
     async listHolidays(context, entities) {
-        // If date is mentioned in message filter by date otherwise send all the holidays (public/ flexible)
+        // If date is mentioned in message filter by date
         if (entities[DATE_TIME]) {
             var timexDate = new TimexProperty(entities[DATE_TIME][0].timex.toString());
             if (entities[REQUEST_TYPES] && entities[REQUEST_TYPES][0].includes(FLEXIBLE_HOLIDAY_TYPE)) {
