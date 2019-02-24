@@ -1,4 +1,6 @@
 const { ActivityTypes, CardFactory, ActionTypes } = require('botbuilder')
+const { DateUtil } = require('./util/date_util')
+
 const holidays = require('./resources/holidays.json');
 const FLEXIBLE_HOLIDAY_TYPE = "flexible holidays";
 const DATE_TIME = "datetime";
@@ -8,24 +10,31 @@ const FLEXIBLE_HOLIDAY = "flexible"
 
 class HolidayCalendar {
 
-    async listHolidays(context, entities) {
+    async listHolidays(context, entities, dateTime, date) {
         // If date is mentioned in message filter by date
-        if (entities[DATE_TIME]) {
-            await context.sendActivity("Filtering by date is not yet supported");
+        let dateFilter = [];
+        if (dateTime && dateTime.length != 0) {
+            dateFilter = DateUtil.fetchDateFilterFromLuisDate(dateTime);
+        } else if(date && date.length != 0) {
+            dateFilter = DateUtil.fetchDateFilterFromLuisDate(date);
         } else {
-            // filter all the upcoming holidays based on the type (public/flexible) from current date.
-            if (entities[REQUEST_TYPES] && entities[REQUEST_TYPES][0].includes(FLEXIBLE_HOLIDAY_TYPE)) {
-                await this.sendUpcomingFlexibleHolidays(context, new Date());
-            } else {
-                await this.sendUpcomindPublicHolidays(context, new Date());
-            }
+            dateFilter.push(new Date());
         }
 
-        const reply = {
-            type: ActivityTypes.Message,
-            attachments: [this.holidayCard]
-        };
-        await context.sendActivity(reply);
+        if(dateFilter.length == 0) {
+            await context.sendActivity("Please provide upcoming dates.");
+        } else {
+            if (entities[REQUEST_TYPES] && entities[REQUEST_TYPES][0].includes(FLEXIBLE_HOLIDAY_TYPE)) {
+                await this.sendUpcomingFlexibleHolidays(context, dateFilter);
+            } else {
+                await this.sendUpcomindPublicHolidays(context, dateFilter);
+            }
+            const reply = {
+                type: ActivityTypes.Message,
+                attachments: [this.holidayCard]
+            };
+            await context.sendActivity(reply);
+        }
     }
 
     async sendUpcomindPublicHolidays(context, dateFilter) {
@@ -52,7 +61,7 @@ class HolidayCalendar {
 
     filterHolidaysByTypeAndDate(holidayTypeFilter, dateFilter) {
         return holidays.filter(function (calendarHoliday) {
-            return calendarHoliday.type === holidayTypeFilter && (dateFilter < new Date(calendarHoliday.date));
+            return calendarHoliday.type === holidayTypeFilter && (dateFilter.includes(new Date(calendarHoliday.date).getTime()));
         });
     }
     createHeroCard(flexibleHolidays) {

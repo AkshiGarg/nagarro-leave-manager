@@ -82,8 +82,7 @@ class NagarroLeaveManagerBot {
                         } else {
                             // fetch the information of Luis result from conversation state (if present) otherwise, call LUIS api.
 
-                            const { topIntent, entities } = await this.fetchLuisResult(conversationFlow, turnContext);
-
+                            const { topIntent, entities, dateTime, date } = await this.fetchLuisResult(conversationFlow, turnContext);
                             await this.conversationStateAccessor.set(turnContext, conversationFlow);
                             await this.conversationState.saveChanges(turnContext);
 
@@ -96,11 +95,11 @@ class NagarroLeaveManagerBot {
                                     break;
                                 case HOLIDAY:
                                     const holidayCalendar = new HolidayCalendar();
-                                    await holidayCalendar.listHolidays(turnContext, entities);
+                                    await holidayCalendar.listHolidays(turnContext, entities, dateTime, date);
                                     break;
                                 case LEAVE_REQUESTS:
                                     if (entities[Action_Types]) {
-                                        await this.fetchLeavesByActionType(userProfile.id, entities, turnContext, conversationFlow);
+                                        await this.fetchLeavesByActionType(userProfile.id, entities, dateTime, turnContext, conversationFlow);
                                     } else {
                                         await turnContext.sendActivity("Do you want to apply for a leave or Do you want me to show your leaves.");
                                     }
@@ -133,16 +132,16 @@ class NagarroLeaveManagerBot {
     }
 
     // Two action types are acceptable (show to list / apply to apply for leave)
-    async fetchLeavesByActionType(userId, entities, turnContext, conversationFlow) {
+    async fetchLeavesByActionType(userId, entities, dateTime, turnContext, conversationFlow) {
         const userRecord = this.leaveSubmissionForm.getUserRecordFromFile(userId);
         const actionTypes = entities[Action_Types][0];
         if (!userRecord) {
             await turnContext.sendActivity("No user found with id: " + userId);
         } else if (actionTypes.includes(APPLY_ACTION)) {
-            await this.applyForLeave(userRecord, entities, conversationFlow, turnContext);
+            await this.applyForLeave(userRecord, entities, dateTime, conversationFlow, turnContext);
         } else if (actionTypes.includes(SHOW_ACTION)) {
             const leaveRequestManager = new LeaveRequestManager();
-            await leaveRequestManager.viewSubmittedRequests(userRecord, turnContext, entities);
+            await leaveRequestManager.viewSubmittedRequests(userRecord, turnContext, entities, dateTime);
         }
     }
 
@@ -150,8 +149,10 @@ class NagarroLeaveManagerBot {
         const result = conversationFlow.luisResultForAskedQuestion[0] || await this.luisRecognizer.recognize(turnContext);
         const topIntent = result.luisResult.topScoringIntent.intent;
         const entities = result.entities;
+        const dateRange = result.luisResult.entities.filter(entity => entity.type === "builtin.datetimeV2.daterange")
+        const date = result.luisResult.entities.filter(entity => entity.type === "builtin.datetimeV2.date")
         conversationFlow.luisResultForAskedQuestion.length = [];
-        return { topIntent, entities };
+        return { topIntent, entities, dateRange, date };
     }
 
     async welcomeUser(turnContext) {
@@ -167,7 +168,7 @@ class NagarroLeaveManagerBot {
         await this.conversationState.saveChanges(turnContext);
     }
 
-    async applyForLeave(userLeaveRecord, entities, conversationFlow, turnContext) {
+    async applyForLeave(userLeaveRecord, entities, dateTime, conversationFlow, turnContext) {
         if (userLeaveRecord.leavesTaken === 27) {
             await turnContext.sendActivity("You have taken all your leaves. You can not apply for more.");
         } else {

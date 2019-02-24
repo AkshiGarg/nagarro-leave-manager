@@ -30,6 +30,42 @@ class DateUtil {
             };
         }
     }
+
+    static fetchDateFilterFromLuisDate(luisDate) {
+        const results = Recognizers.recognizeDateTime(luisDate[0].entity, Recognizers.Culture.English);
+        let output = [];
+        results.forEach(function (result) {
+            result.resolution['values'].forEach(function (resolution) {
+                const now = new Date();
+                const earliest = now.getTime();
+                if (resolution.type === 'daterange') {
+                    const start = resolution['start'];
+                    const end = resolution['end'];
+                    const startDate = new Date(start);
+                    startDate.setHours(0,0,0,0);
+                    const endDate = new Date(end);
+                    endDate.setHours(0,0,0,0);
+                    if (earliest < endDate.getTime()) {
+                        let date = startDate;
+                        while (date < endDate) {
+                            output.push(new Date(date).getTime());
+                            date.setDate(date.getDate() + 1);
+                        }
+                        return;
+                    }
+                } else {
+                    const datevalue = resolution['value'];
+                    const datetime = new Date(datevalue);
+                    datetime.setHours(0,0,0,0);
+                    if (datetime && earliest < datetime.getTime()) {
+                        output.push(datetime.getTime());
+                        return;
+                    }
+                }
+            });
+        });
+        return output;
+    }
 }
 
 module.exports.DateUtil = DateUtil;
