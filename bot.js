@@ -172,7 +172,7 @@ class NagarroLeaveManagerBot {
             await turnContext.sendActivity("You have taken all your leaves. You can not apply for more.");
         } else {
             if (entities[DATE_TIME]) {
-                await turnContext.sendActivity("date already mentioned" + new TimexProperty(entities[DATE_TIME][0].timex.toString()));
+                await turnContext.sendActivity("Applying for leave by specifying date is not yet supported");
             } else {
                 await this.askForDate(conversationFlow, turnContext);
             }

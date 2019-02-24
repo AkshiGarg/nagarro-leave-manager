@@ -1,47 +1,17 @@
-const { TimexProperty } = require('@microsoft/recognizers-text-data-types-timex-expression');
 const { ActivityTypes, CardFactory, ActionTypes } = require('botbuilder')
 const holidays = require('./resources/holidays.json');
-
 const FLEXIBLE_HOLIDAY_TYPE = "flexible holidays";
 const DATE_TIME = "datetime";
 const REQUEST_TYPES = "request_types";
 const PUBLIC_HOLIDAY = "Public";
 const FLEXIBLE_HOLIDAY = "flexible"
+
 class HolidayCalendar {
 
     async listHolidays(context, entities) {
         // If date is mentioned in message filter by date
         if (entities[DATE_TIME]) {
-            var timexDate = new TimexProperty(entities[DATE_TIME][0].timex.toString());
-            if (entities[REQUEST_TYPES] && entities[REQUEST_TYPES][0].includes(FLEXIBLE_HOLIDAY_TYPE)) {
-                var flexibleHolidays = holidays.filter(
-                    function (calendarHoliday) {
-
-                        // date to timex ==> TimexProperty.fromDate(calendarHoliday.date)..   only comparison left
-                        return calendarHoliday.type === FLEXIBLE_HOLIDAY && (new Date() < new Date(calendarHoliday.date));
-                    }
-                );
-                if (flexibleHolidays.length > 0) {
-                    this.holidayCard = this.createHeroCard(flexibleHolidays);
-                } else {
-                    await context.sendActivity("No flexible holidays.");
-                }
-            } else {
-                var publicHolidays = holidays.filter(
-                    function (calendarHoliday) {
-                        // date to timex ==> TimexProperty.fromDate(calendarHoliday.date)..   only comparison left
-                        return calendarHoliday.type === PUBLIC_HOLIDAY && (new Date() < new Date(calendarHoliday.date));
-                    }
-                );
-
-                if (publicHolidays.length > 0) {
-
-                    this.holidayCard = this.createAdaptiveCard(publicHolidays);
-                } else {
-                    await context.sendActivity("No public holidays.");
-                }
-            }
-
+            await context.sendActivity("Filtering by date is not yet supported");
         } else {
             // filter all the upcoming holidays based on the type (public/flexible) from current date.
             if (entities[REQUEST_TYPES] && entities[REQUEST_TYPES][0].includes(FLEXIBLE_HOLIDAY_TYPE)) {
