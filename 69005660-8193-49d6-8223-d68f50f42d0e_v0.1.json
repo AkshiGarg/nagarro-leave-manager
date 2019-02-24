@@ -1,0 +1,299 @@
+{
+  "luis_schema_version": "3.2.0",
+  "versionId": "0.1",
+  "name": "NagarroLeaveManagerBot App",
+  "desc": "",
+  "culture": "en-us",
+  "tokenizerVersion": "1.0.0",
+  "intents": [
+    {
+      "name": "Greeting"
+    },
+    {
+      "name": "Help"
+    },
+    {
+      "name": "leave_requests"
+    },
+    {
+      "name": "None"
+    },
+    {
+      "name": "Upcoming Holidays"
+    }
+  ],
+  "entities": [],
+  "composites": [],
+  "closedLists": [
+    {
+      "name": "action_types",
+      "subLists": [
+        {
+          "canonicalForm": "show",
+          "list": [
+            "details",
+            "view",
+            "list",
+            "provide"
+          ]
+        },
+        {
+          "canonicalForm": "apply",
+          "list": [
+            "take",
+            "on leave",
+            "on off",
+            "submit"
+          ]
+        }
+      ],
+      "roles": []
+    },
+    {
+      "name": "request_types",
+      "subLists": [
+        {
+          "canonicalForm": "leave",
+          "list": [
+            "off",
+            "out of office",
+            "OOTF",
+            "leaves",
+            "leaves"
+          ]
+        },
+        {
+          "canonicalForm": "flexible holidays",
+          "list": [
+            "flexible leaves",
+            "flexi",
+            "flexi holidays",
+            "flexi leaves",
+            "flexible holiday",
+            "flexis"
+          ]
+        }
+      ],
+      "roles": []
+    }
+  ],
+  "patternAnyEntities": [],
+  "regex_entities": [],
+  "prebuiltEntities": [
+    {
+      "name": "datetimeV2",
+      "roles": []
+    }
+  ],
+  "model_features": [],
+  "regex_features": [],
+  "patterns": [],
+  "utterances": [
+    {
+      "text": "1",
+      "intent": "None",
+      "entities": []
+    },
+    {
+      "text": "apply for a leave on 22nd march",
+      "intent": "leave_requests",
+      "entities": []
+    },
+    {
+      "text": "details of leave i have applied for",
+      "intent": "leave_requests",
+      "entities": []
+    },
+    {
+      "text": "hello",
+      "intent": "Greeting",
+      "entities": []
+    },
+    {
+      "text": "help me",
+      "intent": "Help",
+      "entities": []
+    },
+    {
+      "text": "hey",
+      "intent": "Greeting",
+      "entities": []
+    },
+    {
+      "text": "hi",
+      "intent": "Greeting",
+      "entities": []
+    },
+    {
+      "text": "hi, how are you?",
+      "intent": "Greeting",
+      "entities": []
+    },
+    {
+      "text": "holidays in march and april",
+      "intent": "Upcoming Holidays",
+      "entities": []
+    },
+    {
+      "text": "how can you help me?",
+      "intent": "Help",
+      "entities": []
+    },
+    {
+      "text": "i want to take a leave",
+      "intent": "leave_requests",
+      "entities": []
+    },
+    {
+      "text": "i will be on leave on 2nd week of may",
+      "intent": "leave_requests",
+      "entities": []
+    },
+    {
+      "text": "introduce yourself",
+      "intent": "Help",
+      "entities": []
+    },
+    {
+      "text": "list all flexible holidays",
+      "intent": "Upcoming Holidays",
+      "entities": []
+    },
+    {
+      "text": "list holidays for 2019",
+      "intent": "Upcoming Holidays",
+      "entities": []
+    },
+    {
+      "text": "my flexible holidays",
+      "intent": "leave_requests",
+      "entities": []
+    },
+    {
+      "text": "show all flexible holidays",
+      "intent": "Upcoming Holidays",
+      "entities": []
+    },
+    {
+      "text": "show all my holiday requests",
+      "intent": "leave_requests",
+      "entities": []
+    },
+    {
+      "text": "show flexible holidays",
+      "intent": "Upcoming Holidays",
+      "entities": []
+    },
+    {
+      "text": "show holiday on 15th august",
+      "intent": "Upcoming Holidays",
+      "entities": []
+    },
+    {
+      "text": "show holidays",
+      "intent": "Upcoming Holidays",
+      "entities": []
+    },
+    {
+      "text": "show me my leaves",
+      "intent": "leave_requests",
+      "entities": []
+    },
+    {
+      "text": "show me my upcoming flexible holidays",
+      "intent": "leave_requests",
+      "entities": []
+    },
+    {
+      "text": "show my all flexible holidays",
+      "intent": "leave_requests",
+      "entities": []
+    },
+    {
+      "text": "show my all holidays",
+      "intent": "leave_requests",
+      "entities": []
+    },
+    {
+      "text": "show my opted flexible holidays for the month of march",
+      "intent": "leave_requests",
+      "entities": []
+    },
+    {
+      "text": "show my upcoming flexible holidays",
+      "intent": "leave_requests",
+      "entities": []
+    },
+    {
+      "text": "show my upcoming submitted requests",
+      "intent": "leave_requests",
+      "entities": []
+    },
+    {
+      "text": "show upcoming flexible holidays",
+      "intent": "Upcoming Holidays",
+      "entities": []
+    },
+    {
+      "text": "show upcoming flexible holidays for march 2019",
+      "intent": "Upcoming Holidays",
+      "entities": []
+    },
+    {
+      "text": "show upcoming flexible holidays in 2nd week of this month",
+      "intent": "Upcoming Holidays",
+      "entities": []
+    },
+    {
+      "text": "show upcoming flexible holidays in the second week of march",
+      "intent": "Upcoming Holidays",
+      "entities": []
+    },
+    {
+      "text": "show upcoming holdays in this month",
+      "intent": "Upcoming Holidays",
+      "entities": []
+    },
+    {
+      "text": "show upcoming holidays for december",
+      "intent": "Upcoming Holidays",
+      "entities": []
+    },
+    {
+      "text": "show upcoming holidays for march 2019",
+      "intent": "Upcoming Holidays",
+      "entities": []
+    },
+    {
+      "text": "show upcoming holidays.",
+      "intent": "Upcoming Holidays",
+      "entities": []
+    },
+    {
+      "text": "submit a leave request for 3rd april",
+      "intent": "leave_requests",
+      "entities": []
+    },
+    {
+      "text": "submit a leave request for flexible holiday helding on 10th october",
+      "intent": "leave_requests",
+      "entities": []
+    },
+    {
+      "text": "what do you do?",
+      "intent": "Help",
+      "entities": []
+    },
+    {
+      "text": "what's up?",
+      "intent": "Greeting",
+      "entities": []
+    },
+    {
+      "text": "who are you?",
+      "intent": "Help",
+      "entities": []
+    }
+  ],
+  "settings": []
+}

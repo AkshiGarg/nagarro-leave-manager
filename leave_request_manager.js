@@ -1,36 +1,40 @@
 const { CardFactory, ActivityTypes } = require('botbuilder');
-const { TimexProperty } = require('@microsoft/recognizers-text-data-types-timex-expression');
-
-const Recognizers = require('@microsoft/recognizers-text-suite');
-
+const { DateUtil } = require('./util/date_util')
 
 // entities defined in LUIS
-const DATE_TIME = "datetime";
 const REQUEST_TYPES = "request_types";
 
 class LeaveRequestManager {
-    async viewSubmittedRequests(userRecord, context, entities) {
-
-        const dateFilter = entities[DATE_TIME] ?
-            this.getDateFilter(entities[DATE_TIME])
-            : new Date();
-
-        var leaveRequests = userRecord.leaveRequests.filter(
-            leaveRequest => entities[REQUEST_TYPES][0].includes(leaveRequest.type)
-                && (dateFilter < new Date(leaveRequest.date)));
-
-        if (leaveRequests.length === 0) {
-            await context.sendActivity("No upcoming leave requests found for employee: " + userRecord.employeeId);
+    async viewSubmittedRequests(userRecord, context, entities, dateRange, date) {
+        let dateFilter = [];
+        if (dateRange && dateRange.length != 0) {
+            dateFilter = DateUtil.fetchDateFilterFromLuisDate(dateRange);
+        } else if (date && date.length != 0) {
+            dateFilter = DateUtil.fetchDateFilterFromLuisDate(date);
         } else {
-            this.leaveCard = this.createAdaptiveCard(leaveRequests);
-            const reply = {
-                type: ActivityTypes.Message,
-                text: "You have submitted following requests: ",
-                attachments: [this.leaveCard]
-            };
-            await context.sendActivity(reply);
+            dateFilter.push(new Date());
         }
 
+        if (dateFilter.length == 0) {
+            await context.sendActivity("Please provide upcoming dates.");
+        } else {
+
+            var leaveRequests = userRecord.leaveRequests.filter(
+                leaveRequest => entities[REQUEST_TYPES][0].includes(leaveRequest.type)
+                    && (dateFilter.includes(new Date(leaveRequest.date).getTime())));
+
+            if (leaveRequests.length === 0) {
+                await context.sendActivity("No upcoming leave requests found for employee: " + userRecord.employeeId);
+            } else {
+                this.leaveCard = this.createAdaptiveCard(leaveRequests);
+                const reply = {
+                    type: ActivityTypes.Message,
+                    text: "You have submitted following requests: ",
+                    attachments: [this.leaveCard]
+                };
+                await context.sendActivity(reply);
+            }
+        }
     }
 
     getDateFilter(dateTimeFilter) {

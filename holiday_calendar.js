@@ -3,18 +3,17 @@ const { DateUtil } = require('./util/date_util')
 
 const holidays = require('./resources/holidays.json');
 const FLEXIBLE_HOLIDAY_TYPE = "flexible holidays";
-const DATE_TIME = "datetime";
 const REQUEST_TYPES = "request_types";
 const PUBLIC_HOLIDAY = "Public";
 const FLEXIBLE_HOLIDAY = "flexible"
 
 class HolidayCalendar {
 
-    async listHolidays(context, entities, dateTime, date) {
+    async listHolidays(context, entities, dateRange, date) {
         // If date is mentioned in message filter by date
         let dateFilter = [];
-        if (dateTime && dateTime.length != 0) {
-            dateFilter = DateUtil.fetchDateFilterFromLuisDate(dateTime);
+        if (dateRange && dateRange.length != 0) {
+            dateFilter = DateUtil.fetchDateFilterFromLuisDate(dateRange);
         } else if(date && date.length != 0) {
             dateFilter = DateUtil.fetchDateFilterFromLuisDate(date);
         } else {
