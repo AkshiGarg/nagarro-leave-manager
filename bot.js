@@ -23,7 +23,6 @@ const LEAVE_REQUESTS = "leave_requests";
 const APPLY_ACTION = "apply";
 const SHOW_ACTION = "show";
 const Action_Types = "action_types";
-const DATE_TIME = "datetime";
 
 const detail = {
     none: 'none',
@@ -168,12 +167,28 @@ class NagarroLeaveManagerBot {
         await this.conversationState.saveChanges(turnContext);
     }
 
-    async applyForLeave(userLeaveRecord, entities, dateRange, conversationFlow, turnContext) {
+    async applyForLeave(userLeaveRecord, entities, dateRange, date, conversationFlow, turnContext) {
         if (userLeaveRecord.leavesTaken === 27) {
             await turnContext.sendActivity("You have taken all your leaves. You can not apply for more.");
         } else {
-            if (entities[DATE_TIME]) {
-                await turnContext.sendActivity("Applying for leave by specifying date is not yet supported");
+            let dateFilter = [];
+            if (dateRange && dateRange.length != 0) {
+                dateFilter = DateUtil.fetchDateFilterFromLuisDate(dateRange);
+                dateFilter = DateUtil.removeSatAndSun(dateFilter);
+                if (userLeaveRecord.leavesTaken + dateFilter.length > 27) {
+                    await turnContext.sendActivity("You can avail only " + (27 - userLeaveRecord.leavesTaken) + " leaves");
+                } else {
+                    await this.leaveSubmissionForm.submitMultipleLeaveRequests(userLeaveRecord.employeeId, dateFilter, "leave");
+                }
+            } else if (date && date.length != 0) {
+                dateFilter = DateUtil.fetchDateFilterFromLuisDate(date);
+                await this.leaveSubmissionForm
+                    .submitLeaveRequest(
+                        userLeaveRecord.employeeId,
+                        new Date(dateFilter[0]).toString(),
+                        "leave",
+                        "no reason mentioned",
+                        "no comment mentioned");
             } else {
                 await this.askForDate(conversationFlow, turnContext);
             }

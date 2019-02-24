@@ -3,7 +3,7 @@
         "name": "Tom",
         "employeeId": "1",
         "totalLeavesAllowed": 27,
-        "leavesTaken": 15,
+        "leavesTaken": 8,
         "leaveRequests": [
             {
                 "reason": "Visa Appointment",
@@ -42,88 +42,16 @@
                 "comments": ""
             },
             {
-                "reason": "no",
-                "type": "leave",
-                "date": "2/14/2019",
-                "comments": "no"
-            },
-            {
-                "reason": "no",
-                "type": "leave",
-                "date": "2/14/2019",
-                "comments": "no"
-            },
-            {
-                "reason": "no",
-                "type": "leave",
-                "date": "2/14/2019",
-                "comments": "no"
-            },
-            {
-                "reason": "no",
-                "type": "leave",
-                "date": "2/14/2019",
-                "comments": "no"
-            },
-            {
-                "reason": "no",
-                "type": "leave",
-                "date": "2/14/2019",
-                "comments": "no"
-            },
-            {
-                "reason": "no",
-                "type": "leave",
-                "date": "2/14/2019",
-                "comments": "no"
-            },
-            {
-                "reason": "n",
-                "type": "leave",
-                "date": "2/15/2019",
-                "comments": "n"
-            },
-            {
-                "reason": "no",
-                "type": "leave",
-                "date": "2/18/2019",
-                "comments": "no"
-            },
-            {
-                "reason": "no",
-                "type": "leave",
-                "date": "3/12/2019",
-                "comments": "no"
-            },
-            {
-                "reason": "fevr",
-                "type": "leave",
-                "date": "3/13/2019",
-                "comments": "no"
-            },
-            {
-                "reason": "no",
-                "type": "leave",
-                "date": "3/15/2019",
-                "comments": "no"
-            },
-            {
-                "reason": "personla",
-                "type": "leave",
-                "date": "3/21/2019",
-                "comments": "no"
-            },
-            {
-                "reason": "Idul Fitr - Flexible Holiday",
-                "type": "flexible holidays",
-                "date": "5-Jun-2019",
-                "comments": "flexible holiday"
-            },
-            {
                 "reason": "Guru Nanak Jayanti - Flexible Holiday",
                 "type": "flexible holidays",
                 "date": "12-nov-2019",
                 "comments": "flexible holiday"
+            },
+            {
+                "reason": "not mentioned",
+                "type": "leave",
+                "date": "Fri Sep 20 2019",
+                "comments": "no comment mentioned"
             }
         ]
     },
@@ -131,7 +59,7 @@
         "name": "Mark",
         "employeeId": "2",
         "totalLeavesAllowed": 27,
-        "leavesTaken": 26,
+        "leavesTaken": 2,
         "leaveRequests": [
             {
                 "reason": "Personal Work",
@@ -151,7 +79,148 @@
         "name": "Britney",
         "employeeId": "3",
         "totalLeavesAllowed": 27,
+        "leavesTaken": 22,
+        "leaveRequests": [
+            {
+                "reason": "not mentioned",
+                "type": "leave",
+                "date": "12/2/2019",
+                "comments": "no comment mentioned"
+            },
+            {
+                "reason": "not mentioned",
+                "type": "leave",
+                "date": "12/3/2019",
+                "comments": "no comment mentioned"
+            },
+            {
+                "reason": "not mentioned",
+                "type": "leave",
+                "date": "12/4/2019",
+                "comments": "no comment mentioned"
+            },
+            {
+                "reason": "not mentioned",
+                "type": "leave",
+                "date": "12/5/2019",
+                "comments": "no comment mentioned"
+            },
+            {
+                "reason": "not mentioned",
+                "type": "leave",
+                "date": "12/6/2019",
+                "comments": "no comment mentioned"
+            },
+            {
+                "reason": "not mentioned",
+                "type": "leave",
+                "date": "12/9/2019",
+                "comments": "no comment mentioned"
+            },
+            {
+                "reason": "not mentioned",
+                "type": "leave",
+                "date": "12/10/2019",
+                "comments": "no comment mentioned"
+            },
+            {
+                "reason": "not mentioned",
+                "type": "leave",
+                "date": "12/11/2019",
+                "comments": "no comment mentioned"
+            },
+            {
+                "reason": "not mentioned",
+                "type": "leave",
+                "date": "12/12/2019",
+                "comments": "no comment mentioned"
+            },
+            {
+                "reason": "not mentioned",
+                "type": "leave",
+                "date": "12/13/2019",
+                "comments": "no comment mentioned"
+            },
+            {
+                "reason": "not mentioned",
+                "type": "leave",
+                "date": "12/16/2019",
+                "comments": "no comment mentioned"
+            },
+            {
+                "reason": "not mentioned",
+                "type": "leave",
+                "date": "12/17/2019",
+                "comments": "no comment mentioned"
+            },
+            {
+                "reason": "not mentioned",
+                "type": "leave",
+                "date": "12/18/2019",
+                "comments": "no comment mentioned"
+            },
+            {
+                "reason": "not mentioned",
+                "type": "leave",
+                "date": "12/19/2019",
+                "comments": "no comment mentioned"
+            },
+            {
+                "reason": "not mentioned",
+                "type": "leave",
+                "date": "12/20/2019",
+                "comments": "no comment mentioned"
+            },
+            {
+                "reason": "not mentioned",
+                "type": "leave",
+                "date": "12/23/2019",
+                "comments": "no comment mentioned"
+            },
+            {
+                "reason": "not mentioned",
+                "type": "leave",
+                "date": "12/24/2019",
+                "comments": "no comment mentioned"
+            },
+            {
+                "reason": "not mentioned",
+                "type": "leave",
+                "date": "12/25/2019",
+                "comments": "no comment mentioned"
+            },
+            {
+                "reason": "not mentioned",
+                "type": "leave",
+                "date": "12/26/2019",
+                "comments": "no comment mentioned"
+            },
+            {
+                "reason": "not mentioned",
+                "type": "leave",
+                "date": "12/27/2019",
+                "comments": "no comment mentioned"
+            },
+            {
+                "reason": "not mentioned",
+                "type": "leave",
+                "date": "12/30/2019",
+                "comments": "no comment mentioned"
+            },
+            {
+                "reason": "not mentioned",
+                "type": "leave",
+                "date": "12/31/2019",
+                "comments": "no comment mentioned"
+            }
+        ]
+    },
+    {
+        "name": "Robert",
+        "employeeId": "4",
+        "totalLeavesAllowed": 27,
         "leavesTaken": 27,
-        "leaveRequests": []
+        "leaveRequests": [
+        ]
     }
 ]

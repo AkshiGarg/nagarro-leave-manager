@@ -66,6 +66,17 @@ class DateUtil {
         });
         return output;
     }
+
+    static removeSatAndSun(dates) {
+        return dates.filter(
+            function(date) {
+                const dateString = new Date(date); 
+                if(![0, 6].includes(dateString.getDay())){
+                    return dateString.getTime();
+                } 
+            }
+        );
+    }
 }
 
 module.exports.DateUtil = DateUtil;
