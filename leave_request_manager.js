@@ -7,15 +7,32 @@ const REQUEST_TYPES = "request_types";
 class LeaveRequestManager {
     async viewSubmittedRequests(userRecord, context, entities, dateRange, date) {
         let dateFilter = [];
+        let upcomingDate;
         if (dateRange && dateRange.length != 0) {
             dateFilter = DateUtil.fetchDateFilterFromLuisDate(dateRange);
         } else if (date && date.length != 0) {
             dateFilter = DateUtil.fetchDateFilterFromLuisDate(date);
         } else {
-            dateFilter.push(new Date());
+            upcomingDate = new Date();
         }
 
-        if (dateFilter.length == 0) {
+        if (upcomingDate) {
+            var leaveRequests = userRecord.leaveRequests.filter(
+                leaveRequest => entities[REQUEST_TYPES][0].includes(leaveRequest.type)
+                    && (dateFilter< new Date(leaveRequest.date)));
+
+            if (leaveRequests.length === 0) {
+                await context.sendActivity("No upcoming leave requests found for employee: " + userRecord.employeeId);
+            } else {
+                this.leaveCard = this.createAdaptiveCard(leaveRequests);
+                const reply = {
+                    type: ActivityTypes.Message,
+                    text: "You have submitted following requests: ",
+                    attachments: [this.leaveCard]
+                };
+                await context.sendActivity(reply);
+            }
+        } else if (dateFilter.length == 0) {
             await context.sendActivity("Please provide upcoming dates.");
         } else {
 
